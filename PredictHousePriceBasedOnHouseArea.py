@@ -64,6 +64,7 @@ getStatisticsOfData(dataSet)
 #In this simple eample we want to perform linear regression for predicting the
 #price of the house given the area of the house
 space=dataSet['sqft_living']
+#Handle missing data before training the model
 space = handleMissingValues(space)
 price=dataSet['price']
 
@@ -81,10 +82,13 @@ regressor.fit(xtrain, ytrain)
 #Predicting the prices
 pred = regressor.predict(xtest)
 
+# The coefficients
+print 'Coefficients: ', regressor.coef_
+from sklearn.metrics import mean_squared_error
+print "Mean squared error: ", mean_squared_error(ytest, pred)
 from sklearn.metrics import r2_score
 accuracyMeassure = r2_score(ytest, pred)
-
-print "Accuracy of model is",accuracyMeassure*100,"%"
+print "Accuracy of model is {}%".format(accuracyMeassure*100)
 
 #Visualizing the training Test Results 
 plot.scatter(xtrain, ytrain, color= 'blue')
