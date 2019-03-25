@@ -20,6 +20,7 @@ def loadCSV (fileName):
     dataFilePath = os.path.join(dataDirectory, fileName)
     return pd.read_csv(dataFilePath)
 
+#This funtion is used to preview the data in the given dataset
 def previewData (dataSet):
     print(dataSet.head())
     print("\n")
@@ -42,12 +43,15 @@ def getStatisticsOfData (dataSet):
     print("***** Checking for any missing values in the data set: *****")
     checkForMissingValues(dataSet)
     print("\n")
-    
+
+#This funtion is used to handle the missing value in the features, in the 
+#given examples
 def handleMissingValues (feature):
-    from sklearn.preprocessing import Imputer
-    imputer = Imputer(missing_values='NaN',strategy='mean',axis=0)
-    imputer.fit(feature.values)
-    feature_values = imputer.fit_transform(feature.values)
+    feature = np.array(feature).reshape(-1, 1)
+    from sklearn.impute import SimpleImputer
+    imputer = SimpleImputer(missing_values=np.nan,strategy='mean')
+    imputer.fit(feature)
+    feature_values = imputer.fit_transform(feature)
     return feature_values
     
 #Define file names and call loadCSV to load the CSV files
@@ -61,38 +65,45 @@ print("***** Preview the dataSet and look at the statistics of the dataSet *****
 previewData(dataSet)
 getStatisticsOfData(dataSet)
 
-#In this simple eample we want to perform linear regression for predicting the
+#In this simple example we want to perform linear regression for predicting the
 #price of the house given the area of the house
 space=dataSet['sqft_living']
 #Handle missing data before training the model
 space = handleMissingValues(space)
 price=dataSet['price']
 
-x = np.array(space).reshape(-1, 1)
+x = np.array(space)
 y = np.array(price)
 
 #Splitting the data into Train and Test
-from sklearn.cross_validation import train_test_split 
+from sklearn.model_selection import train_test_split 
 xtrain, xtest, ytrain, ytest = train_test_split(x,y,test_size=0.25, random_state=0)
 
 #Fitting simple linear regression to the Training Set
 from sklearn.linear_model import LinearRegression 
 regressor = LinearRegression()
 regressor.fit(xtrain, ytrain)
+
 #Predicting the prices
 pred = regressor.predict(xtest)
 
-# The coefficients
-print 'Coefficients: ', regressor.coef_
+#The coefficients / the linear regression weights
+print ('Coefficients: ', regressor.coef_)
+#Calculating the Mean of the squared error
 from sklearn.metrics import mean_squared_error
-print "Mean squared error: ", mean_squared_error(ytest, pred)
+print ("Mean squared error: ", mean_squared_error(ytest, pred))
+#Finding out the accuracy of the model
 from sklearn.metrics import r2_score
 accuracyMeassure = r2_score(ytest, pred)
-print "Accuracy of model is {}%".format(accuracyMeassure*100)
+print ("Accuracy of model is {}%".format(accuracyMeassure*100))
 
 #Visualizing the training Test Results 
+#Scatter plot the training dataset
 plot.scatter(xtrain, ytrain, color= 'blue')
-plot.plot(xtrain, regressor.predict(xtrain), color = 'red')
+#Scatter plot the test dataset
+plot.scatter(xtest, ytest, color= 'red')
+#Plot the regression line
+plot.plot(xtest, pred, color = 'yellow')
 plot.title ("Visuals for Training Dataset")
 plot.xlabel("Area of House")
 plot.ylabel("Price of House")
