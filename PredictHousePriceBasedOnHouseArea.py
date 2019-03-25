@@ -95,7 +95,7 @@ print ("Mean squared error: ", mean_squared_error(ytest, pred))
 #Finding out the accuracy of the model
 from sklearn.metrics import r2_score
 accuracyMeassure = r2_score(ytest, pred)
-print ("Accuracy of model is {}%".format(accuracyMeassure*100))
+print ("Accuracy of model is {} %".format(accuracyMeassure*100))
 
 #Visualizing the training Test Results 
 #Scatter plot the training dataset
