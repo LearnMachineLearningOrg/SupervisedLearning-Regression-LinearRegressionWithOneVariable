@@ -104,7 +104,7 @@ plot.scatter(xtrain, ytrain, color= 'blue')
 plot.scatter(xtest, ytest, color= 'red')
 #Plot the regression line
 plot.plot(xtest, pred, color = 'yellow')
-plot.title ("Visuals for Training Dataset")
+plot.title ("Visuals for Linear Regression with single feature")
 plot.xlabel("Area of House")
 plot.ylabel("Price of House")
 plot.show()
